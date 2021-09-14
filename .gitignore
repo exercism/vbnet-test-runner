@@ -1,1 +1,4 @@
 tests/*/results.json
+tests/*/bin/
+tests/*/obj/
+tests/*/build.log

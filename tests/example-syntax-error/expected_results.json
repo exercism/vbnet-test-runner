@@ -1,5 +1,5 @@
 {
   "version": 1,
   "status": "fail",
-  "message": "TODO: replace with correct output"
+  "message": "  Determining projects to restore...\n  All projects are up-to-date for restore.\n/opt/test-runner/tests/example-syntax-error/Leap.vb(1,18): error BC30205: End of statement expected. [/opt/test-runner/tests/example-syntax-error/Leap.vbproj]"
 }
