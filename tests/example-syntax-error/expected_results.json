@@ -1,5 +1,5 @@
 {
   "version": 1,
   "status": "fail",
-  "message": "TODO: replace with correct output"
+  "message": "/solution/Leap.vb(1,18): error BC30205: End of statement expected. [/solution/Leap.vbproj]"
 }
