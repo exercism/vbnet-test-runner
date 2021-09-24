@@ -24,12 +24,20 @@ fi
 slug="$1"
 input_dir="${2%/}"
 output_dir="${3%/}"
+exercise=$(echo "${slug}" | sed -r 's/(^|-)([a-z])/\U\2/g')
+tests_file="${input_dir}/$(jq -r '.files.test[0]' "${input_dir}/.meta/config.json")"
+tests_file_original="${tests_file}.original"
 results_file="${output_dir}/results.json"
 
 # Create the output directory if it doesn't exist
 mkdir -p "${output_dir}"
 
 echo "${slug}: testing..."
+
+cp "${tests_file}" "${tests_file_original}"
+
+# Unskip tests
+sed -i -E 's/Skip *:= *"Remove this Skip property to run this test"//' "${tests_file}"
 
 pushd "${input_dir}" > /dev/null
 
@@ -38,16 +46,19 @@ pushd "${input_dir}" > /dev/null
 test_output=$(dotnet test --no-restore 2>&1)
 exit_code=$?
 
+echo $test_output
+
 popd > /dev/null
+
+# Restore the original file
+mv -f "${tests_file_original}" "${tests_file}"
 
 # Write the results.json file based on the exit code of the command that was 
 # just executed that tested the implementation file
 if [ ${exit_code} -eq 0 ]; then
     jq -n '{version: 1, status: "pass"}' > ${results_file}
 else
-    # OPTIONAL: Sanitize the output
-    # In some cases, the test output might be overly verbose, in which case stripping
-    # the unneeded information can be very helpful to the student
+    # Sanitize the output
     # sanitized_test_output=$(printf "${test_output}" | sed -n '/Test results:/,$p')
 
     # OPTIONAL: Manually add colors to the output to help scanning the output for errors

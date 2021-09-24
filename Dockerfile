@@ -13,6 +13,9 @@ WORKDIR /opt/test-runner
 
 RUN apk add bash jq
 
+ENV DOTNET_NOLOGO=true
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
+
 COPY --from=build /root/.nuget/packages/ /root/.nuget/packages/
 COPY . .
 ENTRYPOINT ["/opt/test-runner/bin/run.sh"]
