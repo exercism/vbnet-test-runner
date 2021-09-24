@@ -41,12 +41,12 @@ sed -i -E 's/Skip *:= *"Remove this Skip property to run this test"//' "${tests_
 
 pushd "${input_dir}" > /dev/null
 
+dotnet restore > /dev/null
+
 # Run the tests for the provided implementation file and redirect stdout and
 # stderr to capture it
 test_output=$(dotnet test --no-restore 2>&1)
 exit_code=$?
-
-echo $test_output
 
 popd > /dev/null
 
@@ -59,16 +59,13 @@ if [ ${exit_code} -eq 0 ]; then
     jq -n '{version: 1, status: "pass"}' > ${results_file}
 else
     # Sanitize the output
-    # sanitized_test_output=$(printf "${test_output}" | sed -n '/Test results:/,$p')
+    if grep -q "matched the specified pattern" <<< "${test_output}" ; then
+        sanitized_test_output=$(printf "${test_output}" | sed -n -E -e '1,/matched the specified pattern.$/!p')
+    else
+        sanitized_test_output="${test_output}"
+    fi
 
-    # OPTIONAL: Manually add colors to the output to help scanning the output for errors
-    # If the test output does not contain colors to help identify failing (or passing)
-    # tests, it can be helpful to manually add colors to the output
-    # colorized_test_output=$(echo "${test_output}" \
-    #      | GREP_COLOR='01;31' grep --color=always -E -e '^(ERROR:.*|.*failed)$|$' \
-    #      | GREP_COLOR='01;32' grep --color=always -E -e '^.*passed$|$')
-
-    jq -n --arg output "${test_output}" '{version: 1, status: "fail", message: $output}' > ${results_file}
+    jq -n --arg output "${sanitized_test_output}" '{version: 1, status: "fail", message: $output}' > ${results_file}
 fi
 
 echo "${slug}: done"
