@@ -9,6 +9,7 @@ RUN mkdir -p /usr/share/dotnet \
     chmod +x dotnet-install.sh && \
     ./dotnet-install.sh -c 5.0 --install-dir /usr/share/dotnet && \
     ./dotnet-install.sh -c 6.0 --install-dir /usr/share/dotnet && \
+    ./dotnet-install.sh -c 7.0 --install-dir /usr/share/dotnet && \
     apk add jq && \
     dotnet new
     
