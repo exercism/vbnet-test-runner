@@ -3,3 +3,4 @@ tests/*/bin/
 tests/*/obj/
 tests/*/build.log
 tests/*/*.original
+**/*~
