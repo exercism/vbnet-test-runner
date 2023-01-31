@@ -19,8 +19,11 @@ WORKDIR /tmp
 # Pre-install packages for offline usage
 RUN dotnet new console
 RUN dotnet add package Microsoft.NET.Test.Sdk -v 16.8.3
+RUN dotnet add package Microsoft.NET.Test.Sdk -v 17.4.1
 RUN dotnet add package xunit -v 2.4.1
+RUN dotnet add package xunit -v 2.4.2
 RUN dotnet add package xunit.runner.visualstudio -v 2.4.3
+RUN dotnet add package xunit.runner.visualstudio -v 2.4.5
 
 WORKDIR /opt/test-runner
 COPY . .
