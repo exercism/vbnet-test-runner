@@ -41,11 +41,9 @@ sed -i -E 's/Skip *:= *"Remove this Skip property to run this test"//' "${tests_
 
 pushd "${input_dir}" > /dev/null
 
-dotnet restore > /dev/null
-
 # Run the tests for the provided implementation file and redirect stdout and
 # stderr to capture it
-test_output=$(dotnet test --no-restore 2>&1)
+test_output=$(dotnet test 2>&1)
 exit_code=$?
 
 popd > /dev/null
@@ -53,16 +51,18 @@ popd > /dev/null
 # Restore the original file
 mv -f "${tests_file_original}" "${tests_file}"
 
+printf "${test_output}" > $output_dir/test.txt
+
 # Write the results.json file based on the exit code of the command that was 
 # just executed that tested the implementation file
 if [ ${exit_code} -eq 0 ]; then
     jq -n '{version: 1, status: "pass"}' > ${results_file}
 else
+    sanitized_test_output=$(printf "${test_output}" | sed -E '/  (All projects are up-to-date for restore.|Determining projects to restore\.\.\.|Restored \/.+?)/d')
+
     # Sanitize the output
-    if grep -q "matched the specified pattern" <<< "${test_output}" ; then
-        sanitized_test_output=$(printf "${test_output}" | sed -n -E -e '1,/matched the specified pattern.$/!p')
-    else
-        sanitized_test_output="${test_output}"
+    if grep -q "matched the specified pattern" <<< "${sanitized_test_output}" ; then
+        sanitized_test_output=$(printf "${sanitized_test_output}" | sed -n -E -e '1,/matched the specified pattern.$/!p')
     fi
 
     jq -n --arg output "${sanitized_test_output}" '{version: 1, status: "fail", message: $output}' > ${results_file}
