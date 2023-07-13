@@ -51,8 +51,6 @@ popd > /dev/null
 # Restore the original file
 mv -f "${tests_file_original}" "${tests_file}"
 
-printf "${test_output}" > $output_dir/test.txt
-
 # Write the results.json file based on the exit code of the command that was 
 # just executed that tested the implementation file
 if [ ${exit_code} -eq 0 ]; then
