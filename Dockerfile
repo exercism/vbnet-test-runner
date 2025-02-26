@@ -4,11 +4,9 @@ WORKDIR /tmp
 
 # Pre-install packages for offline usage
 RUN dotnet new console && \
-    # .NET 7 packages for backwards compatibility
     dotnet add package Microsoft.NET.Test.Sdk -v 17.4.1 && \
     dotnet add package xunit -v 2.4.2 && \
-    dotnet add package xunit.runner.visualstudio -v 2.4.5 \
-    # .NET 9 packages
+    dotnet add package xunit.runner.visualstudio -v 2.4.5 && \
     dotnet add package Microsoft.NET.Test.Sdk -v 17.12.0 && \
     dotnet add package xunit -v 2.8.1 && \
     dotnet add package xunit.runner.visualstudio -v 3.0.1
