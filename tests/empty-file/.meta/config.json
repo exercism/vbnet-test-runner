@@ -8,10 +8,10 @@
     ],
     "files": {
         "solution": [
-            "Leap.vb"
+            "EmptyFile.vb"
         ],
         "test": [
-            "LeapTests.vb"
+            "EmptyFileTests.vb"
         ],
         "example": [
             ".meta/Example.vb"

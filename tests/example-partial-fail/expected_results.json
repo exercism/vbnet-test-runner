@@ -1,5 +1,0 @@
-{
-  "version": 1,
-  "status": "fail",
-  "message": "[xUnit.net 00:00:00.73]     Leap.LeapTests.Year_divisible_by_4_and_5_is_still_a_leap_year [FAIL]\n[xUnit.net 00:00:00.74]     Leap.LeapTests.Year_divisible_by_4_not_divisible_by_100_in_leap_year [FAIL]\n  Failed Leap.LeapTests.Year_divisible_by_4_and_5_is_still_a_leap_year [14 ms]\n  Error Message:\n   Assert.True() Failure\nExpected: True\nActual:   False\n  Stack Trace:\n     at Leap.LeapTests.Year_divisible_by_4_and_5_is_still_a_leap_year() in /solution/LeapTests.vb:line 21\n  Failed Leap.LeapTests.Year_divisible_by_4_not_divisible_by_100_in_leap_year [< 1 ms]\n  Error Message:\n   Assert.True() Failure\nExpected: True\nActual:   False\n  Stack Trace:\n     at Leap.LeapTests.Year_divisible_by_4_not_divisible_by_100_in_leap_year() in /solution/LeapTests.vb:line 16\n\nFailed!  - Failed:     2, Passed:     7, Skipped:     0, Total:     9,  - /solution/bin/Debug/net5.0/Leap.dll (net5.0)"
-}

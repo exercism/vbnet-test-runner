@@ -8,10 +8,10 @@
     ],
     "files": {
         "solution": [
-            "Leap.vb"
+            "PartialFail.vb"
         ],
         "test": [
-            "LeapTests.vb"
+            "PartialFailTests.vb"
         ],
         "example": [
             ".meta/Example.vb"

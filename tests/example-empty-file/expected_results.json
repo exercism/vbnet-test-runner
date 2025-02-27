@@ -1,5 +1,0 @@
-{
-  "version": 1,
-  "status": "fail",
-  "message": "/solution/LeapTests.vb(6,24): error BC30456: 'IsLeapYear' is not a member of 'Leap'. [/solution/Leap.vbproj]\n/solution/LeapTests.vb(11,24): error BC30456: 'IsLeapYear' is not a member of 'Leap'. [/solution/Leap.vbproj]\n/solution/LeapTests.vb(16,23): error BC30456: 'IsLeapYear' is not a member of 'Leap'. [/solution/Leap.vbproj]\n/solution/LeapTests.vb(21,23): error BC30456: 'IsLeapYear' is not a member of 'Leap'. [/solution/Leap.vbproj]\n/solution/LeapTests.vb(26,24): error BC30456: 'IsLeapYear' is not a member of 'Leap'. [/solution/Leap.vbproj]\n/solution/LeapTests.vb(31,24): error BC30456: 'IsLeapYear' is not a member of 'Leap'. [/solution/Leap.vbproj]\n/solution/LeapTests.vb(36,23): error BC30456: 'IsLeapYear' is not a member of 'Leap'. [/solution/Leap.vbproj]\n/solution/LeapTests.vb(41,23): error BC30456: 'IsLeapYear' is not a member of 'Leap'. [/solution/Leap.vbproj]\n/solution/LeapTests.vb(46,24): error BC30456: 'IsLeapYear' is not a member of 'Leap'. [/solution/Leap.vbproj]"
-}
