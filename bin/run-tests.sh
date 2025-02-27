@@ -33,8 +33,8 @@ for test_dir in tests/*; do
 
     # TODO: this is a temporary fix around the fact that tests are not returned in order
     # and the .message property can thus not be checked
-    if [ "${test_dir_name}" == "example-all-fail" ] ||
-       [ "${test_dir_name}" == "example-partial-fail" ]; then
+    if [ "${test_dir_name}" == "all-fail" ] ||
+       [ "${test_dir_name}" == "partial-fail" ]; then
       cp "${expected_results_file_path}" "${expected_results_original_file_path}"
       actual_message=$(jq -r '.message' "${results_file_path}")
       jq --arg m "${actual_message}" '.message = $m' "${expected_results_original_file_path}" > "${tmp_results_file_path}" && mv "${tmp_results_file_path}" "${expected_results_file_path}"
@@ -49,8 +49,8 @@ for test_dir in tests/*; do
 
     # TODO: this is a temporary fix around the fact that tests are not returned in order
     # and the .message property can thus not be checked
-    if [ "${test_dir_name}" == "example-all-fail" ] ||
-       [ "${test_dir_name}" == "example-partial-fail" ]; then
+    if [ "${test_dir_name}" == "all-fail" ] ||
+       [ "${test_dir_name}" == "partial-fail" ]; then
        mv "${expected_results_original_file_path}" "${expected_results_file_path}"
     fi
 done
