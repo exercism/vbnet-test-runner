@@ -8,10 +8,10 @@
     ],
     "files": {
         "solution": [
-            "Leap.vb"
+            "Net7.vb"
         ],
         "test": [
-            "LeapTests.vb"
+            "Net7Tests.vb"
         ],
         "example": [
             ".meta/Example.vb"

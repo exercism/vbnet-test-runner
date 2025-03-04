@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "status": "fail",
+  "message": "/solution/SyntaxError.vb(1,18): error BC30205: End of statement expected. [/solution/SyntaxError.vbproj]"
+}

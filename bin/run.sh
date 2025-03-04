@@ -24,10 +24,11 @@ fi
 slug="$1"
 input_dir="${2%/}"
 output_dir="${3%/}"
-exercise=$(echo "${slug}" | sed -r 's/(^|-)([a-z])/\U\2/g')
+exercise=$(echo "${slug}" | awk -F'-' '{ for (i=1; i<=NF; i++) { $i = toupper(substr($i,1,1)) substr($i,2) } } 1' OFS='')
 tests_file="${input_dir}/$(jq -r '.files.test[0]' "${input_dir}/.meta/config.json")"
 tests_file_original="${tests_file}.original"
 results_file="${output_dir}/results.json"
+project_file="${input_dir}/${exercise}.vbproj"
 
 # Create the output directory if it doesn't exist
 mkdir -p "${output_dir}"
@@ -39,11 +40,14 @@ cp "${tests_file}" "${tests_file_original}"
 # Unskip tests
 sed -i -E 's/Skip *:= *"Remove this Skip property to run this test"//' "${tests_file}"
 
+# Fixup target framework
+sed -i -E 's#<TargetFramework>(.+?)</TargetFramework>#<TargetFramework>net9.0</TargetFramework>#' "${project_file}"
+
 pushd "${input_dir}" > /dev/null
 
 # Run the tests for the provided implementation file and redirect stdout and
 # stderr to capture it
-test_output=$(dotnet test 2>&1)
+test_output=$(dotnet restore --source /root/.nuget/packages/ && dotnet test -c release --no-restore 2>&1)
 exit_code=$?
 
 popd > /dev/null

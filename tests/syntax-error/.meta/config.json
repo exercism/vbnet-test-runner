@@ -8,10 +8,10 @@
     ],
     "files": {
         "solution": [
-            "Leap.vb"
+            "SyntaxError.vb"
         ],
         "test": [
-            "LeapTests.vb"
+            "SyntaxErrorTests.vb"
         ],
         "example": [
             ".meta/Example.vb"
