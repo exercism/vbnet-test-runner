@@ -1,18 +1,20 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0.200-alpine3.21-amd64 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0.100-alpine3.22-amd64 AS build
 
 WORKDIR /tmp
 
 # Pre-install packages for offline usage
 RUN dotnet new console && \
-    dotnet add package Microsoft.NET.Test.Sdk -v 17.4.1 && \
-    dotnet add package xunit -v 2.4.2 && \
-    dotnet add package xunit.runner.visualstudio -v 2.4.5 && \
+    # .NET 9 support
     dotnet add package Microsoft.NET.Test.Sdk -v 17.12.0 && \
     dotnet add package xunit -v 2.8.1 && \
-    dotnet add package xunit.runner.visualstudio -v 3.0.1
+    dotnet add package xunit.runner.visualstudio -v 3.0.1 && \
+    # .NET 10 support
+    dotnet add package Microsoft.NET.Test.Sdk -v 18.3.0 && \
+    dotnet add package xunit.v3 -v 3.2.2 && \
+    dotnet add package xunit.runner.visualstudio -v 3.1.5
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/sdk:9.0.200-alpine3.21-amd64 AS runtime
+FROM mcr.microsoft.com/dotnet/sdk:10.0.100-alpine3.22-amd64 AS runtime
 
 RUN apk add --no-cache bash jq
 

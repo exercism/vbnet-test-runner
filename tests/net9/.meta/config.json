@@ -8,10 +8,10 @@
     ],
     "files": {
         "solution": [
-            "Net7.vb"
+            "Net9.vb"
         ],
         "test": [
-            "Net7Tests.vb"
+            "Net9Tests.vb"
         ],
         "example": [
             ".meta/Example.vb"

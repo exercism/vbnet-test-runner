@@ -8,7 +8,7 @@
 *.ps1      text eol=crlf
 
 # Serialisation
-*.json     text
+*.json     text eol=lf
 
 # Text files where line endings should be preserved
 *.patch    -text
