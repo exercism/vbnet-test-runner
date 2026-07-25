@@ -41,7 +41,7 @@ cp "${tests_file}" "${tests_file_original}"
 sed -i -E 's/Skip *:= *"Remove this Skip property to run this test"//' "${tests_file}"
 
 # Fixup target framework
-sed -i -E 's#<TargetFramework>(.+?)</TargetFramework>#<TargetFramework>net9.0</TargetFramework>#' "${project_file}"
+sed -i -E 's#<TargetFramework>(.+?)</TargetFramework>#<TargetFramework>net10.0</TargetFramework>#' "${project_file}"
 
 pushd "${input_dir}" > /dev/null
 
