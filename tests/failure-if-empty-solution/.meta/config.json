@@ -8,10 +8,10 @@
     ],
     "files": {
         "solution": [
-            "PartialFail.vb"
+            "FailureIfEmptySolution.vb"
         ],
         "test": [
-            "PartialFailTests.vb"
+            "FailureIfEmptySolutionTests.vb"
         ],
         "example": [
             ".meta/Example.vb"

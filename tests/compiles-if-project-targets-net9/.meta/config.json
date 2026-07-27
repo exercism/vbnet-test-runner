@@ -8,10 +8,10 @@
     ],
     "files": {
         "solution": [
-            "Net9.vb"
+            "CompilesIfProjectTargetsNet9.vb"
         ],
         "test": [
-            "Net9Tests.vb"
+            "CompilesIfProjectTargetsNet9Tests.vb"
         ],
         "example": [
             ".meta/Example.vb"
