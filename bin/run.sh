@@ -22,7 +22,7 @@ if [ "$#" -lt 3 ]; then
 fi
 
 if [ -f /opt/test-runner/Exercism.TestRunner.VBNet ]; then
-    /opt/test-runner/Exercism.TestRunner.VBNet $1 $2 $3
+    /opt/test-runner/Exercism.TestRunner.VBNet "$1" "$2" "$3"
 else
-    dotnet run --project ./src/Exercism.TestRunner.VBNet/ $1 $2 $3
+    dotnet run --project ./src/Exercism.TestRunner.VBNet/ "$1" "$2" "$3"
 fi
