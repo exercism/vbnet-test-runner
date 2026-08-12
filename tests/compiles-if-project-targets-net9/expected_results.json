@@ -1,4 +1,51 @@
 {
-  "version": 1,
-  "status": "pass"
+  "version": 3,
+  "status": "pass",
+  "tests": [
+    {
+      "name": "Year not divisible by 4 in common year",
+      "status": "pass",
+      "test_code": "Assert.[False](Leap.IsLeapYear(2015))"
+    },
+    {
+      "name": "Year divisible by 2 not divisible by 4 in common year",
+      "status": "pass",
+      "test_code": "Assert.[False](Leap.IsLeapYear(1970))"
+    },
+    {
+      "name": "Year divisible by 4 not divisible by 100 in leap year",
+      "status": "pass",
+      "test_code": "Assert.[True](Leap.IsLeapYear(1996))"
+    },
+    {
+      "name": "Year divisible by 4 and 5 is still a leap year",
+      "status": "pass",
+      "test_code": "Assert.[True](Leap.IsLeapYear(1960))"
+    },
+    {
+      "name": "Year divisible by 100 not divisible by 400 in common year",
+      "status": "pass",
+      "test_code": "Assert.[False](Leap.IsLeapYear(2100))"
+    },
+    {
+      "name": "Year divisible by 100 but not by 3 is still not a leap year",
+      "status": "pass",
+      "test_code": "Assert.[False](Leap.IsLeapYear(1900))"
+    },
+    {
+      "name": "Year divisible by 400 in leap year",
+      "status": "pass",
+      "test_code": "Assert.[True](Leap.IsLeapYear(2000))"
+    },
+    {
+      "name": "Year divisible by 400 but not by 125 is still a leap year",
+      "status": "pass",
+      "test_code": "Assert.[True](Leap.IsLeapYear(2400))"
+    },
+    {
+      "name": "Year divisible by 200 not divisible by 400 in common year",
+      "status": "pass",
+      "test_code": "Assert.[False](Leap.IsLeapYear(1800))"
+    }
+  ]
 }

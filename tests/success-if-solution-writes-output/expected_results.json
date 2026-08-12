@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "status": "pass",
+  "tests": [
+    {
+      "name": "Greet should return a greeting",
+      "status": "pass",
+      "output": "Hello from the solution",
+      "test_code": "Assert.Equal(\u0022Hello!\u0022, Greeter.Greet())"
+    }
+  ]
+}

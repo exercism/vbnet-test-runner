@@ -1,0 +1,18 @@
+{
+  "version": 3,
+  "status": "pass",
+  "tests": [
+    {
+      "name": "Add should add numbers",
+      "status": "pass",
+      "task_id": 1,
+      "test_code": "Assert.Equal(2, Calculator.Add(1, 1))"
+    },
+    {
+      "name": "Subtract should subtract numbers",
+      "status": "pass",
+      "task_id": 2,
+      "test_code": "Assert.Equal(4, Calculator.Subtract(7, 3))"
+    }
+  ]
+}
