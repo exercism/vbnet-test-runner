@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
+set -e
 
 # Synopsis:
 # Test the test runner Docker image by running it against a predefined set of 
@@ -19,9 +20,9 @@ docker build --rm -t exercism/vbnet-test-runner .
 docker run \
     --rm \
     --network none \
-    --read-only \
     --mount type=bind,src="${PWD}/tests",dst=/opt/test-runner/tests \
     --mount type=tmpfs,dst=/tmp \
+    --volume "${PWD}/bin/run-tests.sh:/opt/test-runner/bin/run-tests.sh" \
     --workdir /opt/test-runner \
     --entrypoint /opt/test-runner/bin/run-tests.sh \
     exercism/vbnet-test-runner
