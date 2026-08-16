@@ -3,7 +3,7 @@ ARG TARGETARCH
 
 WORKDIR /tmp
 
-# Pre-install packages for offline usage
+# Pre-install packages for offline restores
 RUN dotnet new console && \
     # .NET 9 support
     dotnet add package Exercism.Tests --version 0.1.0-beta1 && \
@@ -17,6 +17,9 @@ RUN dotnet new console && \
     dotnet add package xunit.runner.visualstudio -v 3.1.5
 
 WORKDIR /app
+
+# Override package location for runner-specific packages that are not needed in the final image.
+ENV NUGET_PACKAGES=/tmp/runner-packages
 
 # Copy csproj and restore as distinct layers
 COPY src/Exercism.TestRunner.VBNet/Exercism.TestRunner.VBNet.vbproj ./
