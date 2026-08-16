@@ -15,6 +15,7 @@ Namespace Global.Exercism.TestRunner.VBNet
             Return document.Descendants(TrxNamespace + "UnitTestResult").
                 Select(Function(result) ToTestResult(result, FindTestMethod(result, testMethods))).
                 OrderBy(Function(result) result.SourceLine).
+                ThenBy(Function(result) result.DataRowOrder).
                 Select(Function(result) result.Result).
                 ToArray()
         End Function
@@ -27,6 +28,7 @@ Namespace Global.Exercism.TestRunner.VBNet
 
             Return New ParsedTestResult With {
                 .SourceLine = method.GetLocation().GetLineSpan().StartLinePosition.Line,
+                .DataRowOrder = GetDataRowOrder(CStr(element.Attribute("testName")), method),
                 .Result = New TestResult With {
                     .Name = Humanize(CStr(element.Attribute("testName"))),
                     .Status = ParseStatus(outcome),
@@ -36,6 +38,32 @@ Namespace Global.Exercism.TestRunner.VBNet
                     .TestCode = ExtractTestCode(method)
                 }
             }
+        End Function
+
+        Private Function GetDataRowOrder(testName As String, method As MethodBlockSyntax) As Integer
+            Dim parameters = method.SubOrFunctionStatement.ParameterList.Parameters
+            Dim inlineData = method.SubOrFunctionStatement.AttributeLists.
+                SelectMany(Function(list) list.Attributes).
+                Where(Function(attribute) attribute.Name.ToString().Equals("InlineData", StringComparison.OrdinalIgnoreCase)).
+                ToArray()
+
+            Dim dataRowOrder = Array.FindIndex(
+                inlineData,
+                Function(attribute)
+                    Dim arguments = attribute.ArgumentList?.Arguments.OfType(Of SimpleArgumentSyntax)().ToArray()
+                    If arguments Is Nothing OrElse arguments.Length <> parameters.Count Then
+                        Return False
+                    End If
+
+                    Dim testNameArguments = parameters.Select(
+                        Function(parameter, argumentIndex)
+                            Return $"{parameter.Identifier.Identifier.ValueText}: {arguments(argumentIndex).Expression}"
+                        End Function)
+                    Dim expectedSuffix = $"({String.Join(", ", testNameArguments)})"
+                    Return testName.EndsWith(expectedSuffix, StringComparison.Ordinal)
+                End Function)
+
+            Return If(dataRowOrder = -1, Integer.MaxValue, dataRowOrder)
         End Function
 
         Private Function FindTestMethod(element As XElement, methods As IEnumerable(Of MethodBlockSyntax)) As MethodBlockSyntax
@@ -106,6 +134,7 @@ Namespace Global.Exercism.TestRunner.VBNet
 
         Private NotInheritable Class ParsedTestResult
             Public Property SourceLine As Integer
+            Public Property DataRowOrder As Integer
             Public Property Result As TestResult
         End Class
     End Module
