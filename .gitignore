@@ -2,5 +2,10 @@ tests/*/results.json
 tests/*/bin/
 tests/*/obj/
 tests/*/build.log
+tests/*/msbuild.log
+tests/*/packages.lock.json
+tests/*/TestResults/
 tests/*/*.original
 **/*~
+src/**/bin/
+src/**/obj/

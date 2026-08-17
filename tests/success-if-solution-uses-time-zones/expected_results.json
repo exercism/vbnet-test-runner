@@ -1,0 +1,26 @@
+{
+  "version": 3,
+  "status": "pass",
+  "tests": [
+    {
+      "name": "Can Get TimeZones",
+      "status": "pass",
+      "test_code": "Assert.NotEmpty(Fake.GetTimeZones())"
+    },
+    {
+      "name": "Has London TimeZone",
+      "status": "pass",
+      "test_code": "Assert.Contains(Fake.GetTimeZones(), Function(timeZone) timeZone.Id = LondonTimeZone)"
+    },
+    {
+      "name": "Has NewYork TimeZone",
+      "status": "pass",
+      "test_code": "Assert.Contains(Fake.GetTimeZones(), Function(timeZone) timeZone.Id = NewYorkTimeZone)"
+    },
+    {
+      "name": "Has Paris TimeZone",
+      "status": "pass",
+      "test_code": "Assert.Contains(Fake.GetTimeZones(), Function(timeZone) timeZone.Id = ParisTimeZone)"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 {
-  "version": 1,
-  "status": "fail",
-  "message": "/solution/FailureIfSyntaxError.vb(1,18): error BC30205: End of statement expected. [/solution/FailureIfSyntaxError.vbproj]"
+  "version": 3,
+  "status": "error",
+  "message": "FailureIfSyntaxError.vb(1,18): error BC30205: End of statement expected.",
+  "tests": []
 }

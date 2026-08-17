@@ -1,0 +1,21 @@
+{
+  "version": 3,
+  "status": "pass",
+  "tests": [
+    {
+      "name": "Add should add numbers(left: 4, right: 5, expected: 9)",
+      "status": "pass",
+      "test_code": "Assert.Equal(expected, Calculator.Add(left, right))"
+    },
+    {
+      "name": "Add should add numbers(left: 1, right: 1, expected: 2)",
+      "status": "pass",
+      "test_code": "Assert.Equal(expected, Calculator.Add(left, right))"
+    },
+    {
+      "name": "Add should add numbers(left: 2, right: 3, expected: 5)",
+      "status": "pass",
+      "test_code": "Assert.Equal(expected, Calculator.Add(left, right))"
+    }
+  ]
+}
