@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0.302-alpine3.23 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0.401-alpine3.23 AS build
 ARG TARGETARCH
 
 WORKDIR /tmp
@@ -33,7 +33,7 @@ RUN dotnet publish -a $TARGETARCH --output /opt/test-runner --no-restore
 RUN find /root/.nuget/packages -type f \( -name '*.nupkg' -o -name '*.snupkg' \) -delete
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/sdk:10.0.302-alpine3.23 AS runtime
+FROM mcr.microsoft.com/dotnet/sdk:10.0.401-alpine3.23 AS runtime
 
 ENV DOTNET_ROLL_FORWARD=Major
 ENV DOTNET_NOLOGO=true
