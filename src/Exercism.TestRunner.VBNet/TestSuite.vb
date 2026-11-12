@@ -31,7 +31,7 @@ Namespace Global.Exercism.TestRunner.VBNet
 
         Private Sub PrepareTestRun()
             DeletePreviousResults()
-            File.WriteAllText(_options.ProjectFilePath, _originalProjectFile.Replace("net9.0", "net10.0"))
+            File.WriteAllText(_options.ProjectFilePath, _originalProjectFile.Replace("net10.0", "net11.0"))
             File.WriteAllText(_options.TestsFilePath, _originalSyntaxTree.Rewrite().ToString())
 
             If CaptureOutput Then
