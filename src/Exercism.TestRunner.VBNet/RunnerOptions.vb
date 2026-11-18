@@ -50,9 +50,15 @@ Namespace Global.Exercism.TestRunner.VBNet
             End Get
         End Property
 
+        Public ReadOnly Property AssemblyFilePath As String
+            Get
+                Return Path.Combine(InputDirectory, "bin", "release", "net11.0", $"{Exercise}.dll")
+            End Get
+        End Property
+
         Public ReadOnly Property TestResultsFilePath As String
             Get
-                Return Path.Combine(InputDirectory, "TestResults", "tests.trx")
+                Return Path.Combine(InputDirectory, "bin", "release", "net11.0", "tests.xml")
             End Get
         End Property
 
