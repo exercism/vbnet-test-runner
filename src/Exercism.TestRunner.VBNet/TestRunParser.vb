@@ -10,14 +10,18 @@ Namespace Global.Exercism.TestRunner.VBNet
                 Return TestRunWithError(logLines)
             End If
 
-            If Not File.Exists(options.TestResultsFilePath) Then
+            Return TestRunWithoutError(options.TestResultsFilePath, testsSyntaxTree)
+        End Function
+
+        Public Function TestRunWithoutError(testResultsFilePath As String, testsSyntaxTree As SyntaxTree) As TestRun
+            If Not File.Exists(testResultsFilePath) Then
                 Return New TestRun With {
                     .Status = TestStatus.Error,
                     .Message = "The test process did not produce test results."
                 }
             End If
 
-            Dim testResults = TestResultParser.FromFile(options.TestResultsFilePath, testsSyntaxTree)
+            Dim testResults = TestResultParser.FromFile(testResultsFilePath, testsSyntaxTree)
             Return New TestRun With {
                 .Status = OverallStatus(testResults),
                 .Tests = testResults
@@ -36,7 +40,7 @@ Namespace Global.Exercism.TestRunner.VBNet
             Return TestStatus.Pass
         End Function
 
-        Private Function TestRunWithError(logLines As IEnumerable(Of String)) As TestRun
+        Public Function TestRunWithError(logLines As IEnumerable(Of String)) As TestRun
             Return New TestRun With {
                 .Message = String.Join(vbLf, logLines.Select(AddressOf NormalizeLogLine)),
                 .Status = TestStatus.Error

@@ -4,7 +4,7 @@ Imports Microsoft.CodeAnalysis.VisualBasic
 
 Namespace Global.Exercism.TestRunner.VBNet
     Friend NotInheritable Class TestSuite
-        Private Const CaptureOutputAssemblyAttributes As String =
+        Public Const CaptureOutputAssemblyAttributes As String =
             "<Assembly: CaptureConsole>" & vbLf &
             "<Assembly: CaptureTrace>" & vbLf
 
@@ -18,7 +18,17 @@ Namespace Global.Exercism.TestRunner.VBNet
             _options = options
         End Sub
 
+        ' The fast path (see FastPath) compiles the solution with Roslyn inside this process and runs the
+        ' tests, without MSBuild. If the solution has anything it doesn't handle, we build and run the tests
+        ' with MSBuild instead. Setting EXERCISM_FAST_PATH=off turns the fast path off, to compare the results.
         Public Function Run() As TestRun
+            If Environment.GetEnvironmentVariable("EXERCISM_FAST_PATH") <> "off" Then
+                Dim fastPathRun = New FastPath(_options, _originalSyntaxTree, RewrittenProjectFile).TryRun()
+                If fastPathRun IsNot Nothing Then
+                    Return fastPathRun
+                End If
+            End If
+
             PrepareTestRun()
 
             Try
@@ -31,10 +41,10 @@ Namespace Global.Exercism.TestRunner.VBNet
 
         Private Sub PrepareTestRun()
             DeletePreviousResults()
-            File.WriteAllText(_options.ProjectFilePath, _originalProjectFile.Replace("net10.0", "net11.0"))
+            File.WriteAllText(_options.ProjectFilePath, RewrittenProjectFile)
             File.WriteAllText(_options.TestsFilePath, _originalSyntaxTree.Rewrite().ToString())
 
-            If CaptureOutput Then
+            If CaptureOutput(_originalProjectFile) Then
                 File.WriteAllText(_options.TestRunnerAssemblyInfoFilePath, CaptureOutputAssemblyAttributes)
             End If
         End Sub
@@ -112,11 +122,15 @@ Namespace Global.Exercism.TestRunner.VBNet
             End If
         End Sub
 
-        Private ReadOnly Property CaptureOutput As Boolean
+        Private ReadOnly Property RewrittenProjectFile As String
             Get
-                Return _originalProjectFile.Contains("Exercism.Tests.xunit.v3", StringComparison.OrdinalIgnoreCase)
+                Return _originalProjectFile.Replace("net10.0", "net11.0")
             End Get
         End Property
+
+        Public Shared Function CaptureOutput(projectFile As String) As Boolean
+            Return projectFile.Contains("Exercism.Tests.xunit.v3", StringComparison.OrdinalIgnoreCase)
+        End Function
 
         Public Shared Function FromOptions(options As RunnerOptions) As TestSuite
             Dim syntaxTree = VisualBasicSyntaxTree.ParseText(File.ReadAllText(options.TestsFilePath))
