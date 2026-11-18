@@ -2,11 +2,17 @@ Imports CommandLine
 
 Namespace Global.Exercism.TestRunner.VBNet
     Public Module Program
-        Public Sub Main(args As String())
+        Public Function Main(args As String()) As Integer
+            ' bin/build-shapes.sh calls this at image build, after building each shape's template project.
+            If args.Length = 2 AndAlso args(0) = "--prepare-shape" Then
+                Return FastPath.PrepareShape(args(1))
+            End If
+
             Parser.Default.
                 ParseArguments(Of RunnerOptions)(args).
                 WithParsed(AddressOf CreateTestResults)
-        End Sub
+            Return 0
+        End Function
 
         Private Sub CreateTestResults(options As RunnerOptions)
             Console.WriteLine($"[{DateTimeOffset.UtcNow:u}] Running test runner for '{options.Slug}' solution...")

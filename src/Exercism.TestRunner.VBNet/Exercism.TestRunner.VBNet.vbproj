@@ -4,6 +4,8 @@
     <TargetFramework>net11.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <OptionStrict>On</OptionStrict>
+    <!-- Precompiling the runner and Roslyn saves JIT time on every run. -->
+    <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
 
   <ItemGroup>

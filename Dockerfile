@@ -30,8 +30,13 @@ RUN dotnet restore -a $TARGETARCH
 COPY src/Exercism.TestRunner.VBNet/ ./
 RUN dotnet publish -a $TARGETARCH --output /opt/test-runner --no-restore
 
-# Slim the pre-installed NuGet cache
-RUN find /root/.nuget/packages -type f \( -name '*.nupkg' -o -name '*.snupkg' \) -delete
+# Slim the pre-installed NuGet cache. The ReadyToRun compiler (crossgen2) and the runtime packs,
+# restored for the runner, move to /r2r-packages, so that only the shape build below sees them.
+RUN find /root/.nuget/packages -type f \( -name '*.nupkg' -o -name '*.snupkg' \) -delete && \
+    mkdir /r2r-packages && \
+    mv /tmp/runner-packages/microsoft.netcore.app.crossgen2.* \
+       /tmp/runner-packages/microsoft.netcore.app.runtime.* \
+       /tmp/runner-packages/microsoft.aspnetcore.app.runtime.* /r2r-packages/
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/sdk:11.0.100-alpine3.24 AS runtime
@@ -47,5 +52,10 @@ COPY --from=build /usr/local/bin/ /usr/local/bin/
 COPY --from=build /root/.nuget/packages/ /root/.nuget/packages/
 
 COPY bin/run.sh bin/
+
+# Build a template project for each known project shape, for the runner's fast path
+COPY shapes/ shapes/
+COPY bin/build-shapes.sh bin/
+RUN --mount=type=bind,from=build,source=/r2r-packages,target=/r2r-packages sh bin/build-shapes.sh
 
 ENTRYPOINT ["sh", "/opt/test-runner/bin/run.sh"]
