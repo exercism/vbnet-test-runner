@@ -1,4 +1,6 @@
 Imports System.IO
+Imports System.Text.RegularExpressions
+Imports System.Xml
 Imports Humanizer
 Imports Microsoft.CodeAnalysis
 Imports Microsoft.CodeAnalysis.VisualBasic
@@ -6,13 +8,20 @@ Imports Microsoft.CodeAnalysis.VisualBasic.Syntax
 
 Namespace Global.Exercism.TestRunner.VBNet
     Friend Module TestResultParser
-        Private ReadOnly TrxNamespace As XNamespace = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
-
+        ' Reads the XML report written by the xUnit v3 test executable.
         Public Function FromFile(resultsFilePath As String, testsSyntaxTree As SyntaxTree) As TestResult()
-            Dim document = XDocument.Load(resultsFilePath)
+            Dim document As XDocument
+
+            ' The report will be unreadable if xUnit failed while writing it.
+            Try
+                document = XDocument.Load(resultsFilePath)
+            Catch exception As XmlException
+                Return Array.Empty(Of TestResult)()
+            End Try
+
             Dim testMethods = testsSyntaxTree.GetRoot().DescendantNodes().OfType(Of MethodBlockSyntax)().ToArray()
 
-            Return document.Descendants(TrxNamespace + "UnitTestResult").
+            Return document.Descendants("test").
                 Select(Function(result) ToTestResult(result, FindTestMethod(result, testMethods))).
                 OrderBy(Function(result) result.SourceLine).
                 ThenBy(Function(result) result.DataRowOrder).
@@ -21,16 +30,15 @@ Namespace Global.Exercism.TestRunner.VBNet
         End Function
 
         Private Function ToTestResult(element As XElement, method As MethodBlockSyntax) As ParsedTestResult
-            Dim outcome = CStr(element.Attribute("outcome"))
-            Dim errorInfo = element.Element(TrxNamespace + "Output")?.Element(TrxNamespace + "ErrorInfo")
-            Dim message = Normalize(errorInfo?.Element(TrxNamespace + "Message")?.Value)
-            Dim output = Normalize(element.Element(TrxNamespace + "Output")?.Element(TrxNamespace + "StdOut")?.Value)
+            Dim outcome = CStr(element.Attribute("result"))
+            Dim message = Normalize(Unescape(element.Element("failure")?.Element("message")?.Value))
+            Dim output = Normalize(element.Element("output")?.Value)
 
             Return New ParsedTestResult With {
                 .SourceLine = method.GetLocation().GetLineSpan().StartLinePosition.Line,
-                .DataRowOrder = GetDataRowOrder(CStr(element.Attribute("testName")), method),
+                .DataRowOrder = GetDataRowOrder(CStr(element.Attribute("name")), method),
                 .Result = New TestResult With {
-                    .Name = Humanize(CStr(element.Attribute("testName"))),
+                    .Name = Humanize(CStr(element.Attribute("name"))),
                     .Status = ParseStatus(outcome),
                     .Message = message,
                     .Output = output,
@@ -67,7 +75,7 @@ Namespace Global.Exercism.TestRunner.VBNet
         End Function
 
         Private Function FindTestMethod(element As XElement, methods As IEnumerable(Of MethodBlockSyntax)) As MethodBlockSyntax
-            Dim testName = CStr(element.Attribute("testName"))
+            Dim testName = CStr(element.Attribute("name"))
             Dim nameWithoutArguments = testName.Split("("c)(0)
             Dim parts = nameWithoutArguments.Split("."c)
             Dim methodName = parts(parts.Length - 1)
@@ -84,9 +92,9 @@ Namespace Global.Exercism.TestRunner.VBNet
 
         Private Function ParseStatus(outcome As String) As TestStatus
             Select Case outcome
-                Case "Passed"
+                Case "Pass"
                     Return TestStatus.Pass
-                Case "Failed"
+                Case "Fail"
                     Return TestStatus.Fail
                 Case Else
                     Return TestStatus.Error
@@ -122,6 +130,48 @@ Namespace Global.Exercism.TestRunner.VBNet
             Next
 
             Return Nothing
+        End Function
+
+        ' xUnit's XML report escapes some characters in failure messages with a backslash, such as \n for a
+        ' newline and \x01 for other control characters. This turns them back into the original characters.
+        Private Function Unescape(message As String) As String
+            If message Is Nothing Then
+                Return Nothing
+            End If
+
+            Return EscapedCharacter.Replace(message, AddressOf UnescapeCharacter)
+        End Function
+
+        Private ReadOnly EscapedCharacter As New Regex("\\(x[01][0-9a-f]|.)")
+
+        Private Function UnescapeCharacter(match As Match) As String
+            Dim escaped = match.Groups(1).Value
+            Select Case escaped
+                Case "n"
+                    Return vbLf
+                Case "r"
+                    Return vbCr
+                Case "t"
+                    Return vbTab
+                Case "0"
+                    Return ChrW(0)
+                Case "a"
+                    Return ChrW(7)
+                Case "b"
+                    Return ChrW(8)
+                Case "f"
+                    Return ChrW(12)
+                Case "v"
+                    Return ChrW(11)
+                Case "\", """"
+                    Return escaped
+            End Select
+
+            If escaped.Length = 3 Then
+                Return ChrW(Convert.ToInt32(escaped.Substring(1), 16))
+            End If
+
+            Return match.Value
         End Function
 
         Private Function Normalize(value As String) As String
