@@ -74,7 +74,7 @@ The runner prints `Fast path not used: <reason>` and uses MSBuild if any of thes
 If the track changes an exercise's `.vbproj` (for example to bump a package version or add a package), solutions for that exercise will use MSBuild until the image has a matching shape. They will still pass or fail correctly, just more slowly. To add the new shape:
 
 1. Make sure any new package is pre-installed in the `Dockerfile`, as before.
-1. Regenerate the shapes from a checkout of the track repo, with `python3 bin/generate-shapes.py shapes <path to exercism/vbnet>`. You can also copy the new `.vbproj` into a new folder as `shapes/<n>/ExercismShape.vbproj` by hand.
+1. Regenerate the shapes from a checkout of the track repo, with `bin/generate-shapes.sh shapes <path to exercism/vbnet>`. You can also copy the new `.vbproj` into a new folder as `shapes/<n>/ExercismShape.vbproj` by hand.
 1. Rebuild the image. The build log says `Built shape ...` for each shape, or `Skipping shape ...` if a template failed to build.
 1. Run an exercise with the new project file, and check that the runner does not print `Fast path not used: unknown project shape`.
 
