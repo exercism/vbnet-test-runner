@@ -49,20 +49,34 @@ Namespace Global.Exercism.TestRunner.VBNet
             End If
         End Sub
 
+        ' We build the project, then run the xUnit v3 test executable directly. This is faster than
+        ' `dotnet test`, which would also start VSTest and a test host to run the same executable.
         Private Sub RunTests()
             Dim workingDirectory = Path.GetDirectoryName(_options.TestsFilePath)
             RunProcess("dotnet", {"restore", "--source", "/root/.nuget/packages/"}, workingDirectory)
             RunProcess(
                 "dotnet",
                 {
-                    "test",
+                    "build",
                     "-c", "release",
                     "--no-restore",
                     "--verbosity=quiet",
-                    "--logger", $"trx;LogFileName={Path.GetFileName(_options.TestResultsFilePath)}",
+                    "-nologo",
                     "/flp:logfile=msbuild.log;verbosity=quiet;errorsOnly=true"
                 },
                 workingDirectory)
+
+            If File.Exists(_options.AssemblyFilePath) Then
+                RunTestExecutable(_options.AssemblyFilePath, _options.TestResultsFilePath)
+            End If
+        End Sub
+
+        ' The test executable writes xUnit's XML report to reportFilePath.
+        Public Shared Sub RunTestExecutable(assemblyFilePath As String, reportFilePath As String)
+            RunProcess(
+                "dotnet",
+                {"exec", assemblyFilePath, "-xml", reportFilePath, "-noLogo", "-noColor"},
+                Path.GetDirectoryName(assemblyFilePath))
         End Sub
 
         Private Shared Sub RunProcess(command As String, arguments As IEnumerable(Of String), workingDirectory As String)
