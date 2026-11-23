@@ -10,6 +10,8 @@ RUN dotnet new console && \
     dotnet add package Microsoft.NET.Test.Sdk -v 18.3.0 && \
     dotnet add package xunit.v3 -v 3.2.2 && \
     dotnet add package xunit.runner.visualstudio -v 3.1.5 && \
+    # The save-the-cow exercise uses Microsoft.Reactive.Testing
+    dotnet add package Microsoft.Reactive.Testing -v 5.0.0 && \
     # .NET 11 support
     dotnet add package Microsoft.NET.Test.Sdk -v 18.11.1 && \
     dotnet add package xunit.v3.mtp-off -v 4.0.3 && \
