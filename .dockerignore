@@ -1,5 +1,7 @@
 *
 !bin/run.sh
+!bin/build-shapes.sh
+!shapes
 
 !src/Exercism.TestRunner.VBNet
 src/Exercism.TestRunner.VBNet/bin
